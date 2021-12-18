@@ -1,0 +1,12 @@
+from django.shortcuts import render
+from .models import Snack
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from .serializers import SnackSerializer
+
+class SnackList(ListCreateAPIView):
+    queryset = Snack.objects.all()
+    serializer_class = SnackSerializer
+
+class SnackDetail(RetrieveUpdateDestroyAPIView):
+    queryset = Snack.objects.all()
+    serializer_class = SnackSerializer
