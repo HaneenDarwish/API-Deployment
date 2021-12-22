@@ -37,8 +37,8 @@ SECRET_KEY = env.str('SECRET_KEY')
 
 DEBUG = env.bool('DEBUG')
 
-ALLOWED_HOSTS = tuple(env.list('ALLOWED_HOSTS'))
-
+# ALLOWED_HOSTS = tuple(env.list('ALLOWED_HOSTS'))
+ALLOWED_HOSTS = ['localhost', 'http://127.0.0.1:8000']
 
 # Application definition
 
@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # Third-party app
     'rest_framework',
+    'rest_framework_simplejwt',
     'corsheaders',
     # local app
     'snacks',
@@ -101,8 +102,16 @@ DATABASES = {
         'HOST': env.str('DATABASE_HOST', ""),
         'PORT': env.int('DATABASE_PORT', ""),
     }
-}
+} 
 
+# if not DEBUG else {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
+# AUTH_USER_MODEL = 'snacks.Snack'
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -149,11 +158,17 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny'
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     ]
+    
 }
+CORS_ORIGIN_ALLOW_ALL = True
+# CORS_ORIGIN_WHITELIST = tuple(env.list("ALLOWED_ORIGINS"))
+# CORS_ALLOW_ALL_ORIGINS = env.bool("ALLOW_ALL_ORIGINS")
 
-CORS_ORIGIN_WHITELIST = tuple(env.list("ALLOWED_ORIGINS"))
-CORS_ALLOW_ALL_ORIGINS = env.bool("ALLOW_ALL_ORIGINS")
-
-print("CORS_ALLOW_ALL_ORIGINS", CORS_ALLOW_ALL_ORIGINS)
+# print("CORS_ALLOW_ALL_ORIGINS", CORS_ALLOW_ALL_ORIGINS)
